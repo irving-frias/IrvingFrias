@@ -7,7 +7,7 @@ on:
 env:
   ASPNETCORE_ENVIRONMENT: Production
   WEBAPP_PATH: ./
-  WEBAPP_CSPROJ: BlazorStaticMinimalBlog.csproj
+  WEBAPP_CSPROJ: IrvingFrias.csproj
 
 jobs:
   build-and-deploy:
