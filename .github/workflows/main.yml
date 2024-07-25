@@ -1,43 +1,44 @@
-name: Deploy to GitHub Pages
 
-# Run workflow on every push to the master branch
+name: Build and publish to gh pages
+
 on:
   push:
-    branches: [ master ]
+    branches: [ "*" ]
+env:
+  ASPNETCORE_ENVIRONMENT: Production
+  WEBAPP_PATH: ./
+  WEBAPP_CSPROJ: IrvingFrias.csproj
 
 jobs:
-  deploy-to-github-pages:
-    # use ubuntu-latest image to run steps on
+  build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-    # uses GitHub's checkout action to checkout code form the master branch
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-    # sets up .NET Core SDK 3.1
-    - name: Setup .NET Core SDK
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 8.0.303
+      - name: Remove launchSettings.json (to not override ASPNETCORE_ENVIRONMENT)
+        run: rm  ${{ env.WEBAPP_PATH }}Properties/launchSettings.json
 
-    # publishes Blazor project to the release-folder
-    - name: Publish .NET Core Project
-      run: dotnet publish IrvingFrias.csproj -c Release -o release --nologo
+      - name: Tailwind - download and run cli
+        run: |
+          wget https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64 -O /usr/local/bin/tailwindcss
+          chmod +x /usr/local/bin/tailwindcss
+          cd ${{ env.WEBAPP_PATH }}
+          tailwindcss --input ./wwwroot/app.css  --output ./wwwroot/app.min.css  --minify
 
-    # changes the base-tag in index.html from '/' to 'IrvingFrias' to match GitHub Pages repository subdirectory
-    - name: Change base-tag in index.html from / to IrvingFrias
-      run: sed -i 's/<base href="\/" \/>/<base href="\/IrvingFrias\/" \/>/g' release/wwwroot/index.html
+      - name: Change <base href="" /> in App.razor to match gh repo name
+        run: |
+          REPO_NAME=$(echo "${{ github.repository }}" | awk -F '/' '{print $NF}')
+          sed -i 's/<base href="\/" \/>/<base href="\/'$REPO_NAME'\/" \/>/g' ${{ env.WEBAPP_PATH }}Components/App.razor
+      - run: touch ${{ env.WEBAPP_PATH }}/wwwroot/.nojekyll #folder starting with _ are handled as jekyll. This file will prevent that.
+      - name: Run webapp and generate static files
+        run: |
+          dotnet run --project ${{ env.WEBAPP_PATH }}${{env.WEBAPP_CSPROJ}}  --configuration Release
 
-    # copy index.html to 404.html to serve the same file when a file is not found
-    - name: copy index.html to 404.html
-      run: cp release/wwwroot/index.html release/wwwroot/404.html
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: ${{ env.WEBAPP_PATH }}output
 
-    # add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. (Allow files and folders starting with an underscore)
-    - name: Add .nojekyll file
-      run: touch release/wwwroot/.nojekyll
 
-    - name: Commit wwwroot to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@3.7.1
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: release/wwwroot
