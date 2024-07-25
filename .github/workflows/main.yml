@@ -29,8 +29,7 @@ jobs:
 
       - name: Change <base href="" /> in App.razor to match gh repo name
         run: |
-          REPO_NAME=$(echo "${{ github.repository }}" | awk -F '/' '{print $NF}')
-          sed -i 's/<base href="\/" \/>/<base href="\/'$REPO_NAME'\/" \/>/g' ${{ env.WEBAPP_PATH }}Components/App.razor
+          sed -i 's|<base href="/[^"]*"|<base href="https://irving-frias.github.io/"|g' ${{ env.WEBAPP_PATH }}Components/App.razor
       - run: touch ${{ env.WEBAPP_PATH }}/wwwroot/.nojekyll #folder starting with _ are handled as jekyll. This file will prevent that.
       - name: Run webapp and generate static files
         run: |
