@@ -35,10 +35,10 @@ app.Run();
 
 public static class WebsiteKeys
 {
-    public const string GitHubRepo = "https://github.com/irving-frias/IrvingFrias";
+    public const string GitHubRepo = "https://github.com/irving-frias/irving-frias.github.io";
     public const string X = "https://x.com/irving-frias";
     public const string Title = "Irving Frias Blog";
-    public const string BlogPostStorageAddress = $"{GitHubRepo}/tree/main/Content/Blog";
-    public const string BlogLead = "Sample blog created with BlazorStatic and tailwindcss";
+    public const string BlogPostStorageAddress = $"{GitHubRepo}/tree/master/Content/Blog";
+    public const string BlogLead = "Blog";
 
 }

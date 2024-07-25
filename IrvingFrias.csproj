@@ -12,16 +12,16 @@
     <PackageReference Include="BlazorStatic" Version="1.0.0-beta.9" />
   </ItemGroup>
   <ItemGroup>
-<!--    <ProjectReference Include="..\src\BlazorStatic.csproj" />-->
+<!--    <ProjectReference Include="..\src\IrvingFrias.csproj" />-->
   </ItemGroup>
-  
-  
+
+
   <ItemGroup>
     <None Update="Content/**/*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
-  
+
 
 </Project>
