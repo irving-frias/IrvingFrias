@@ -5,7 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.UseStaticWebAssets();
 
-builder.Services.AddBlazorStaticService(opt => {
+builder.Services.AddBlazorStaticService(opt =>
+{
     opt.IgnoredPathsOnContentCopy.Add("app.css");//pre-build version for tailwind
 }
 ).AddBlazorStaticContentService<BlogFrontMatter>();
@@ -36,7 +37,7 @@ app.Run();
 public static class WebsiteKeys
 {
     public const string GitHubRepo = "https://github.com/irving-frias/irving-frias.github.io";
-    public const string X = "https://x.com/irving-frias";
+    public const string X = "https://x.com/irvingfrias41";
     public const string Title = "Irving Frias Blog";
     public const string BlogPostStorageAddress = $"{GitHubRepo}/tree/master/Content/Blog";
     public const string BlogLead = "Blog";

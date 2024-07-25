@@ -49,7 +49,6 @@
 <script>
 //👎 but what can I do? It's a static html. I can't use C# here.
  const toggleMobileMenu = () => document.querySelector('#mobile-menu').classList.toggle('translate-x-full');
- 
  document.querySelector('#toggle-button').addEventListener('click', toggleMobileMenu);
  document.querySelector('#close-mobile-menu-button').addEventListener('click', toggleMobileMenu);
 </script>
@@ -63,7 +62,6 @@
         new("Tags", "tags"),
         new("", WebsiteKeys.GitHubRepo, Svg.Icons.Github)
     ];
-   
-    
+
     record MenuItem(string Name, string Link, Svg.Icons? Icon = null);
 }
